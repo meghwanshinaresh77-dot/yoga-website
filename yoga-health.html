@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>योग & स्वास्थ्य — आपका स्वस्थ जीवन</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #6b7f5e;
+    --sage-light: #a8bc97;
+    --earth: #c4956a;
+    --cream: #f5f0e8;
+    --deep: #2c3a28;
+    --white: #fefcf7;
+    --accent: #e8a87c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--deep);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(254,252,247,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(107,127,94,0.15);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--deep);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-logo span { color: var(--sage); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--deep);
+    font-size: 0.88rem; font-weight: 500; letter-spacing: 0.5px;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--sage); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 5% 80px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--white) 60%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(168,188,151,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -80px; left: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(196,149,106,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-content { max-width: 620px; position: relative; z-index: 2; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(107,127,94,0.12); color: var(--sage);
+    padding: 6px 16px; border-radius: 40px;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 24px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    line-height: 1.1; margin-bottom: 20px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  .hero h1 em { color: var(--sage); font-style: italic; }
+  .hero p {
+    font-size: 1.05rem; line-height: 1.7; color: #5a6b52;
+    margin-bottom: 36px; font-weight: 300;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-btns {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--sage); color: var(--white);
+    padding: 14px 32px; border-radius: 50px;
+    text-decoration: none; font-weight: 500;
+    transition: all 0.3s; box-shadow: 0 4px 20px rgba(107,127,94,0.35);
+  }
+  .btn-primary:hover { background: var(--deep); transform: translateY(-2px); }
+  .btn-outline {
+    border: 2px solid var(--sage); color: var(--sage);
+    padding: 12px 30px; border-radius: 50px;
+    text-decoration: none; font-weight: 500;
+    transition: all 0.3s;
+  }
+  .btn-outline:hover { background: var(--sage); color: white; }
+  .hero-visual {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    width: clamp(280px, 40%, 520px);
+    animation: floatIn 1s 0.4s ease both;
+    z-index: 2;
+  }
+  .yoga-circle {
+    width: 100%; aspect-ratio: 1;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(168,188,151,0.3), rgba(196,149,106,0.2));
+    border: 2px solid rgba(107,127,94,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(6rem, 15vw, 12rem);
+    animation: spin-slow 20s linear infinite;
+    position: relative;
+  }
+  .yoga-circle::before {
+    content: ''; position: absolute; inset: 20px;
+    border-radius: 50%; border: 1px dashed rgba(107,127,94,0.3);
+    animation: spin-slow 15s linear infinite reverse;
+  }
+
+  /* STATS */
+  .stats {
+    background: var(--deep);
+    padding: 50px 5%;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 40px; text-align: center;
+  }
+  .stat-item { color: var(--cream); }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem; color: var(--sage-light); display: block;
+  }
+  .stat-label { font-size: 0.85rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* SECTION SHARED */
+  section { padding: 100px 5%; }
+  .section-tag {
+    display: inline-block; color: var(--earth);
+    font-size: 0.78rem; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem); margin-bottom: 16px; line-height: 1.2;
+  }
+  .section-sub { color: #6b7b62; max-width: 550px; line-height: 1.7; font-weight: 300; }
+
+  /* YOGA SECTION */
+  .yoga-section { background: var(--white); }
+  .yoga-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px; margin-top: 60px;
+  }
+  .yoga-card {
+    background: var(--cream);
+    border-radius: 20px; padding: 36px 28px;
+    border: 1px solid rgba(107,127,94,0.12);
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+  }
+  .yoga-card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at top right, rgba(107,127,94,0.15), transparent);
+    border-radius: 0 20px 0 80px;
+  }
+  .yoga-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(44,58,40,0.1); }
+  .yoga-emoji { font-size: 2.5rem; margin-bottom: 16px; display: block; }
+  .yoga-card h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.3rem;
+    margin-bottom: 10px; color: var(--deep);
+  }
+  .yoga-card p { font-size: 0.9rem; color: #6b7b62; line-height: 1.6; font-weight: 300; }
+  .yoga-duration {
+    display: inline-block; margin-top: 16px;
+    background: rgba(107,127,94,0.12); color: var(--sage);
+    padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 500;
+  }
+
+  /* MEALS SECTION */
+  .meals-section { background: var(--cream); }
+  .meals-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px; }
+  .meal-tabs {
+    display: flex; gap: 8px; margin: 40px 0 32px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 8px 20px; border-radius: 30px; cursor: pointer;
+    font-size: 0.85rem; font-weight: 500;
+    border: 2px solid rgba(107,127,94,0.2);
+    background: transparent; color: var(--deep);
+    transition: all 0.3s;
+  }
+  .tab.active, .tab:hover { background: var(--sage); color: white; border-color: var(--sage); }
+  .meals-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .meal-card {
+    background: var(--white); border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(44,58,40,0.06);
+    transition: all 0.3s;
+  }
+  .meal-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(44,58,40,0.12); }
+  .meal-img {
+    height: 160px; font-size: 5rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .meal-body { padding: 20px; }
+  .meal-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 6px; }
+  .meal-card p { font-size: 0.85rem; color: #6b7b62; line-height: 1.5; font-weight: 300; }
+  .meal-meta { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .meal-tag {
+    font-size: 0.72rem; font-weight: 500; padding: 3px 10px; border-radius: 20px;
+  }
+  .tag-protein { background: rgba(232,168,124,0.2); color: var(--earth); }
+  .tag-veg { background: rgba(107,127,94,0.15); color: var(--sage); }
+  .tag-cal { background: rgba(44,58,40,0.1); color: var(--deep); }
+
+  /* TIPS SECTION */
+  .tips-section { background: var(--white); }
+  .tips-layout {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center; margin-top: 60px;
+  }
+  .tips-list { display: flex; flex-direction: column; gap: 24px; }
+  .tip-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px; border-radius: 14px;
+    border: 1px solid transparent;
+    transition: all 0.3s; cursor: pointer;
+  }
+  .tip-item:hover { background: var(--cream); border-color: rgba(107,127,94,0.2); }
+  .tip-icon {
+    width: 48px; height: 48px; min-width: 48px;
+    background: rgba(107,127,94,0.12); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+  .tip-text h4 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin-bottom: 6px; }
+  .tip-text p { font-size: 0.87rem; color: #6b7b62; line-height: 1.5; font-weight: 300; }
+  .tips-visual {
+    background: linear-gradient(145deg, var(--sage), var(--deep));
+    border-radius: 24px; padding: 50px 40px; color: white; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .tips-visual::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .tips-visual h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.8rem;
+    margin-bottom: 12px; position: relative;
+  }
+  .tips-visual p { opacity: 0.8; line-height: 1.6; position: relative; font-size: 0.95rem; }
+  .routine-items { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; position: relative; }
+  .routine-item {
+    background: rgba(255,255,255,0.12); border-radius: 12px;
+    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .routine-time { font-size: 0.78rem; opacity: 0.7; min-width: 50px; }
+  .routine-act { font-size: 0.9rem; font-weight: 500; }
+
+  /* FOOTER */
+  footer {
+    background: var(--deep); color: var(--cream);
+    padding: 60px 5% 30px;
+    text-align: center;
+  }
+  footer h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 10px; }
+  footer p { opacity: 0.6; font-size: 0.9rem; margin-bottom: 30px; font-weight: 300; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; margin-top: 40px; opacity: 0.5; font-size: 0.82rem; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(-50%) translateX(40px); }
+    to { opacity: 1; transform: translateY(-50%) translateX(0); }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-visual { display: none; }
+    .tips-layout { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🌿 <span>Yog</span>Jeevan</div>
+  <ul class="nav-links">
+    <li><a href="#yoga">योग आसन</a></li>
+    <li><a href="#meals">स्वस्थ भोजन</a></li>
+    <li><a href="#tips">स्वास्थ्य टिप्स</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">🌱 स्वस्थ जीवन की शुरुआत</div>
+    <h1>योग से पाएं<br><em>स्वस्थ काया</em><br>और शांत मन</h1>
+    <p>योग, सही खान-पान और अच्छी दिनचर्या से अपने जीवन को बदलें। हर दिन एक बेहतर आप।</p>
+    <div class="hero-btns">
+      <a href="#yoga" class="btn-primary">योग शुरू करें</a>
+      <a href="#meals" class="btn-outline">भोजन योजना</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="yoga-circle" style="animation: float 4s ease-in-out infinite, spin-slow 25s linear infinite;">🧘</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item reveal">
+    <span class="stat-num">5000+</span>
+    <span class="stat-label">सालों पुरानी परंपरा</span>
+  </div>
+  <div class="stat-item reveal">
+    <span class="stat-num">300+</span>
+    <span class="stat-label">योग आसन</span>
+  </div>
+  <div class="stat-item reveal">
+    <span class="stat-num">∞</span>
+    <span class="stat-label">स्वास्थ्य लाभ</span>
+  </div>
+  <div class="stat-item reveal">
+    <span class="stat-num">15 मिनट</span>
+    <span class="stat-label">रोज़ाना काफी है</span>
+  </div>
+</div>
+
+<!-- YOGA SECTION -->
+<section class="yoga-section" id="yoga">
+  <div class="section-tag">🧘 योग आसन</div>
+  <h2 class="section-title">रोज़ के लिए आसन</h2>
+  <p class="section-sub">ये आसन शरीर को लचीला, मन को शांत और स्वास्थ्य को बेहतर बनाते हैं।</p>
+
+  <div class="yoga-grid">
+    <div class="yoga-card reveal">
+      <span class="yoga-emoji">🌅</span>
+      <h3>सूर्य नमस्कार</h3>
+      <p>12 आसनों का यह क्रम पूरे शरीर को सक्रिय करता है। वजन घटाने और शक्ति बढ़ाने के लिए सर्वोत्तम।</p>
+      <span class="yoga-duration">⏱ 15–30 मिनट</span>
+    </div>
+    <div class="yoga-card reveal">
+      <span class="yoga-emoji">🦋</span>
+      <h3>वृक्षासन</h3>
+      <p>संतुलन और एकाग्रता के लिए। पीठ को मज़बूत करता है और मन को स्थिर रखता है।</p>
+      <span class="yoga-duration">⏱ 5 मिनट</span>
+    </div>
+    <div class="yoga-card reveal">
+      <span class="yoga-emoji">🐍</span>
+      <h3>भुजंगासन</h3>
+      <p>पीठ दर्द में राहत, रीढ़ की हड्डी मज़बूत होती है। तनाव कम करने में सहायक।</p>
+      <span class="yoga-duration">⏱ 3 मिनट</span>
+    </div>
+    <div class="yoga-card reveal">
+      <span class="yoga-emoji">🌊</span>
+      <h3>शवासन</h3>
+      <p>मन और शरीर को पूर्ण विश्राम। तनाव, अनिद्रा और थकान दूर करने के लिए।</p>
+      <span class="yoga-duration">⏱ 10 मिनट</span>
+    </div>
+    <div class="yoga-card reveal">
+      <span class="yoga-emoji">🏔️</span>
+      <h3>ताड़ासन</h3>
+      <p>खड़े होने का सही तरीका। मुद्रा सुधारता है, लम्बाई बढ़ाने में मदद करता है।</p>
+      <span class="yoga-duration">⏱ 2 मिनट</span>
+    </div>
+    <div class="yoga-card reveal">
+      <span class="yoga-emoji">💨</span>
+      <h3>अनुलोम-विलोम</h3>
+      <p>नाड़ी शोधन प्राणायाम। फेफड़ों को मज़बूत करे, रक्त शुद्ध करे, मन शांत करे।</p>
+      <span class="yoga-duration">⏱ 10 मिनट</span>
+    </div>
+  </div>
+</section>
+
+<!-- MEALS SECTION -->
+<section class="meals-section" id="meals">
+  <div class="meals-header">
+    <div>
+      <div class="section-tag">🥗 स्वस्थ भोजन</div>
+      <h2 class="section-title">पोषण से भरपूर आहार</h2>
+      <p class="section-sub">सही खाना खाएं — शरीर खुद को ठीक करता है।</p>
+    </div>
+  </div>
+
+  <div class="meal-tabs">
+    <button class="tab active" onclick="filterMeals('all', this)">सभी</button>
+    <button class="tab" onclick="filterMeals('breakfast', this)">सुबह</button>
+    <button class="tab" onclick="filterMeals('lunch', this)">दोपहर</button>
+    <button class="tab" onclick="filterMeals('dinner', this)">रात</button>
+    <button class="tab" onclick="filterMeals('snack', this)">स्नैक्स</button>
+  </div>
+
+  <div class="meals-grid" id="mealsGrid">
+    <div class="meal-card reveal" data-cat="breakfast">
+      <div class="meal-img" style="background: linear-gradient(135deg,#fef9e7,#fdebd0);">🥣</div>
+      <div class="meal-body">
+        <h3>दलिया और दूध</h3>
+        <p>उच्च फाइबर, धीमी ऊर्जा। सुबह के योग के बाद बेस्ट नाश्ता।</p>
+        <div class="meal-meta">
+          <span class="meal-tag tag-cal">🔥 220 kcal</span>
+          <span class="meal-tag tag-protein">💪 8g प्रोटीन</span>
+          <span class="meal-tag tag-veg">🌱 शाकाहारी</span>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card reveal" data-cat="breakfast">
+      <div class="meal-img" style="background: linear-gradient(135deg,#e8f5e9,#f0f4c3);">🥤</div>
+      <div class="meal-body">
+        <h3>हरी स्मूदी</h3>
+        <p>पालक, केला, अदरक और नारियल पानी। डिटॉक्स और एनर्जी के लिए।</p>
+        <div class="meal-meta">
+          <span class="meal-tag tag-cal">🔥 180 kcal</span>
+          <span class="meal-tag tag-veg">🌱 शाकाहारी</span>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card reveal" data-cat="lunch">
+      <div class="meal-img" style="background: linear-gradient(135deg,#fff3e0,#fce4ec);">🫙</div>
+      <div class="meal-body">
+        <h3>मूंग दाल खिचड़ी</h3>
+        <p>पाचन के लिए हल्की, प्रोटीन से भरपूर। बीमारी और व्रत में भी उत्तम।</p>
+        <div class="meal-meta">
+          <span class="meal-tag tag-cal">🔥 350 kcal</span>
+          <span class="meal-tag tag-protein">💪 15g प्रोटीन</span>
+          <span class="meal-tag tag-veg">🌱 शाकाहारी</span>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card reveal" data-cat="lunch">
+      <div class="meal-img" style="background: linear-gradient(135deg,#e0f2f1,#b2dfdb);">🥗</div>
+      <div class="meal-body">
+        <h3>चना सलाद</h3>
+        <p>उबले चने, खीरा, टमाटर, नींबू। हाई प्रोटीन, लो कैलोरी।</p>
+        <div class="meal-meta">
+          <span class="meal-tag tag-cal">🔥 290 kcal</span>
+          <span class="meal-tag tag-protein">💪 18g प्रोटीन</span>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card reveal" data-cat="dinner">
+      <div class="meal-img" style="background: linear-gradient(135deg,#fce4ec,#f8bbd0);">🍲</div>
+      <div class="meal-body">
+        <h3>पालक पनीर</h3>
+        <p>कैल्शियम, आयरन और प्रोटीन का खजाना। रात के खाने के लिए परफेक्ट।</p>
+        <div class="meal-meta">
+          <span class="meal-tag tag-cal">🔥 320 kcal</span>
+          <span class="meal-tag tag-protein">💪 16g प्रोटीन</span>
+          <span class="meal-tag tag-veg">🌱 शाकाहारी</span>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card reveal" data-cat="snack">
+      <div class="meal-img" style="background: linear-gradient(135deg,#fff9c4,#ffecb3);">🥜</div>
+      <div class="meal-body">
+        <h3>मिश्रित मेवे</h3>
+        <p>बादाम, अखरोट, किशमिश। दिमाग तेज़ करे, ऊर्जा दे, भूख कम करे।</p>
+        <div class="meal-meta">
+          <span class="meal-tag tag-cal">🔥 150 kcal</span>
+          <span class="meal-tag tag-protein">💪 5g प्रोटीन</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPS SECTION -->
+<section class="tips-section" id="tips">
+  <div class="section-tag">💚 स्वास्थ्य टिप्स</div>
+  <h2 class="section-title">स्वस्थ जीवन के<br>सुनहरे नियम</h2>
+
+  <div class="tips-layout">
+    <div class="tips-list">
+      <div class="tip-item reveal">
+        <div class="tip-icon">💧</div>
+        <div class="tip-text">
+          <h4>पानी पहले</h4>
+          <p>सुबह उठते ही 2 गिलास गुनगुना पानी पिएं। यह पाचन को सक्रिय करता है और शरीर को डिटॉक्स करता है।</p>
+        </div>
+      </div>
+      <div class="tip-item reveal">
+        <div class="tip-icon">🌙</div>
+        <div class="tip-text">
+          <h4>नींद का महत्व</h4>
+          <p>7-8 घंटे की गहरी नींद शरीर की मरम्मत करती है। रात 10 बजे तक सोने की कोशिश करें।</p>
+        </div>
+      </div>
+      <div class="tip-item reveal">
+        <div class="tip-icon">🧘</div>
+        <div class="tip-text">
+          <h4>सुबह का ध्यान</h4>
+          <p>केवल 10 मिनट का ध्यान पूरे दिन की एकाग्रता और मानसिक शांति बनाए रखता है।</p>
+        </div>
+      </div>
+      <div class="tip-item reveal">
+        <div class="tip-icon">🚶</div>
+        <div class="tip-text">
+          <h4>रोज़ 10,000 कदम</h4>
+          <p>पैदल चलना सबसे सरल व्यायाम है। दिल, हड्डियां और मनोबल — सब मजबूत होते हैं।</p>
+        </div>
+      </div>
+      <div class="tip-item reveal">
+        <div class="tip-icon">🍽️</div>
+        <div class="tip-text">
+          <h4>समय पर भोजन</h4>
+          <p>सुबह 8, दोपहर 1 और रात 7 बजे — इस दिनचर्या से मेटाबॉलिज्म बेहतर रहता है।</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tips-visual reveal">
+      <h3>आदर्श दिनचर्या</h3>
+      <p>एक स्वस्थ दिन की शुरुआत यहाँ से करें</p>
+      <div class="routine-items">
+        <div class="routine-item">
+          <span class="routine-time">5:30 AM</span>
+          <span class="routine-act">🌅 उठें, पानी पिएं</span>
+        </div>
+        <div class="routine-item">
+          <span class="routine-time">6:00 AM</span>
+          <span class="routine-act">🧘 योग / प्राणायाम</span>
+        </div>
+        <div class="routine-item">
+          <span class="routine-time">7:30 AM</span>
+          <span class="routine-act">🥣 पोषक नाश्ता</span>
+        </div>
+        <div class="routine-item">
+          <span class="routine-time">1:00 PM</span>
+          <span class="routine-act">🍲 हल्का दोपहर भोजन</span>
+        </div>
+        <div class="routine-item">
+          <span class="routine-time">5:00 PM</span>
+          <span class="routine-act">🚶 शाम की सैर</span>
+        </div>
+        <div class="routine-item">
+          <span class="routine-time">7:00 PM</span>
+          <span class="routine-act">🫙 हल्का रात का खाना</span>
+        </div>
+        <div class="routine-item">
+          <span class="routine-time">10:00 PM</span>
+          <span class="routine-act">🌙 नींद की तैयारी</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <h2>🌿 YogJeevan</h2>
+  <p>स्वस्थ जीवन की राह पर आपका साथी</p>
+  <p style="opacity:0.5; font-size:0.8rem;">💚 योग करें • सही खाएं • खुश रहें</p>
+  <div class="footer-bottom">© 2025 YogJeevan — स्वस्थ भारत, सुखी भारत</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Meal filter
+  function filterMeals(cat, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.meal-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>
