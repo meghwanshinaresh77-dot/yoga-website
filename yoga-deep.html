@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YogJeevan — Deep Knowledge</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sage: #5c7a4e;
+  --sage-light: #8fad80;
+  --earth: #b5784a;
+  --cream: #f4efe6;
+  --deep: #1e2d1a;
+  --gold: #c9a84c;
+  --white: #fdfaf4;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Outfit', sans-serif; background: var(--deep); color: var(--cream); overflow-x: hidden; cursor: none; }
+
+/* CURSOR */
+.cursor { position: fixed; width: 12px; height: 12px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s; mix-blend-mode: difference; }
+.cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(201,168,76,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.15s ease; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; background: rgba(30,45,26,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(201,168,76,0.15); }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--gold); }
+.nav-back { text-decoration: none; color: var(--cream); font-size: 0.85rem; opacity: 0.7; transition: opacity 0.3s; }
+.nav-back:hover { opacity: 1; color: var(--gold); }
+
+/* HERO */
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 120px 5% 80px; position: relative; overflow: hidden; }
+#bgCanvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.4; }
+.hero-content { position: relative; z-index: 2; }
+.hero-badge { display: inline-block; border: 1px solid rgba(201,168,76,0.4); color: var(--gold); padding: 6px 20px; border-radius: 40px; font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 28px; animation: fadeUp 1s ease both; }
+.hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 7vw, 6rem); line-height: 1.05; margin-bottom: 20px; animation: fadeUp 1s 0.1s ease both; }
+.hero h1 em { color: var(--gold); font-style: italic; }
+.hero p { font-size: 1rem; opacity: 0.7; max-width: 500px; margin: 0 auto 40px; line-height: 1.7; font-weight: 300; animation: fadeUp 1s 0.2s ease both; }
+.scroll-hint { animation: bounce 2s infinite; font-size: 0.8rem; opacity: 0.4; letter-spacing: 2px; }
+
+/* CHAKRA SECTION */
+.chakra-section { padding: 100px 5%; }
+.sec-label { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+.sec-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 50px; }
+.chakra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2px; }
+.chakra-card { padding: 32px 28px; border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden; }
+.chakra-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s; }
+.chakra-card:hover::before { opacity: 1; }
+.chakra-card:hover { transform: scale(1.02); z-index: 2; }
+.chakra-symbol { font-size: 2.5rem; margin-bottom: 14px; display: block; }
+.chakra-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; margin-bottom: 6px; }
+.chakra-hindi { font-size: 0.8rem; opacity: 0.5; margin-bottom: 12px; letter-spacing: 1px; }
+.chakra-desc { font-size: 0.88rem; line-height: 1.6; opacity: 0.7; font-weight: 300; }
+.chakra-bar { height: 2px; margin-top: 16px; border-radius: 2px; transform: scaleX(0); transform-origin: left; transition: transform 0.6s ease; }
+.chakra-card:hover .chakra-bar { transform: scaleX(1); }
+
+/* BREATH SECTION */
+.breath-section { padding: 100px 5%; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.breath-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.breath-circle-wrap { display: flex; justify-content: center; align-items: center; }
+.breath-outer { width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; position: relative; }
+.breath-middle { width: 220px; height: 220px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.15); display: flex; align-items: center; justify-content: center; }
+.breath-inner { width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(92,122,78,0.4), rgba(30,45,26,0.8)); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.5s ease; border: 1px solid rgba(201,168,76,0.3); }
+.breath-text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gold); }
+.breath-count { font-size: 2rem; font-weight: 300; }
+.breath-controls { display: flex; gap: 12px; margin-top: 24px; justify-content: center; flex-wrap: wrap; }
+.breath-btn { padding: 10px 24px; border-radius: 40px; border: 1px solid rgba(201,168,76,0.4); background: transparent; color: var(--gold); font-size: 0.82rem; cursor: pointer; transition: all 0.3s; font-family: 'Outfit', sans-serif; letter-spacing: 1px; }
+.breath-btn:hover, .breath-btn.active { background: var(--gold); color: var(--deep); }
+.breath-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; margin-bottom: 16px; }
+.breath-info p { opacity: 0.6; line-height: 1.7; font-weight: 300; margin-bottom: 20px; }
+.pranayama-list { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+.prana-item { padding: 14px 18px; border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.3s; }
+.prana-item:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.05); }
+.prana-name { font-size: 0.92rem; }
+.prana-benefit { font-size: 0.75rem; opacity: 0.5; }
+
+/* NUTRITION CALCULATOR */
+.calc-section { padding: 100px 5%; }
+.calc-box { max-width: 700px; margin: 0 auto; }
+.calc-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+.input-group { display: flex; flex-direction: column; gap: 8px; }
+.input-group label { font-size: 0.78rem; letter-spacing: 1px; opacity: 0.6; text-transform: uppercase; }
+.input-group input, .input-group select { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; color: var(--cream); font-size: 0.92rem; font-family: 'Outfit', sans-serif; transition: border-color 0.3s; outline: none; }
+.input-group input:focus, .input-group select:focus { border-color: rgba(201,168,76,0.5); }
+.input-group select option { background: var(--deep); }
+.calc-btn { grid-column: 1/-1; background: linear-gradient(135deg, var(--sage), var(--deep)); border: 1px solid var(--sage); color: white; padding: 14px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-family: 'Outfit', sans-serif; letter-spacing: 1px; transition: all 0.3s; }
+.calc-btn:hover { background: linear-gradient(135deg, var(--sage-light), var(--sage)); transform: translateY(-2px); }
+.calc-result { grid-column: 1/-1; display: none; }
+.result-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.result-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px; text-align: center; }
+.result-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold); display: block; }
+.result-label { font-size: 0.75rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 1px; }
+.meal-plan { margin-top: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 20px; }
+.meal-plan h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 14px; color: var(--gold); }
+.meal-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem; }
+.meal-row:last-child { border: none; }
+.meal-row span:last-child { opacity: 0.5; }
+
+/* QUIZ SECTION */
+.quiz-section { padding: 100px 5%; background: rgba(255,255,255,0.02); }
+.quiz-box { max-width: 600px; margin: 0 auto; }
+.question-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; }
+.q-num { font-size: 0.75rem; opacity: 0.4; letter-spacing: 2px; margin-bottom: 16px; }
+.q-text { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 28px; line-height: 1.3; }
+.q-options { display: flex; flex-direction: column; gap: 10px; }
+.q-opt { padding: 12px 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.3s; font-size: 0.88rem; background: transparent; color: var(--cream); font-family: 'Outfit', sans-serif; text-align: left; }
+.q-opt:hover { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.05); }
+.q-opt.correct { border-color: #5c7a4e; background: rgba(92,122,78,0.2); color: #8fad80; }
+.q-opt.wrong { border-color: #7a4e4e; background: rgba(122,78,78,0.2); color: #ad8080; }
+.quiz-progress { height: 3px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 32px; }
+.quiz-progress-bar { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.4s ease; }
+.quiz-score { text-align: center; display: none; }
+.score-num { font-family: 'Cormorant Garamond', serif; font-size: 5rem; color: var(--gold); }
+.quiz-next { margin-top: 20px; background: transparent; border: 1px solid rgba(201,168,76,0.4); color: var(--gold); padding: 10px 28px; border-radius: 40px; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.85rem; transition: all 0.3s; display: none; }
+.quiz-next:hover { background: var(--gold); color: var(--deep); }
+
+/* ASANA TIMER */
+.timer-section { padding: 100px 5%; }
+.asana-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 40px; }
+.asana-tile { border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 22px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.asana-tile:hover, .asana-tile.selected { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.05); }
+.asana-emoji { font-size: 2rem; display: block; margin-bottom: 10px; }
+.asana-tile h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; margin-bottom: 4px; }
+.asana-tile p { font-size: 0.75rem; opacity: 0.5; }
+.asana-tile .duration { font-size: 0.72rem; color: var(--gold); margin-top: 8px; display: block; }
+.timer-display { text-align: center; margin-top: 50px; }
+.timer-circle { width: 200px; height: 200px; border-radius: 50%; border: 2px solid rgba(201,168,76,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 24px; position: relative; }
+.timer-circle svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer-circle svg circle { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+.timer-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: var(--gold); line-height: 1; }
+.timer-label { font-size: 0.78rem; opacity: 0.5; letter-spacing: 2px; }
+.timer-btns { display: flex; gap: 12px; justify-content: center; }
+.t-btn { padding: 10px 28px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: var(--cream); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.85rem; transition: all 0.3s; }
+.t-btn.primary { border-color: var(--gold); color: var(--gold); }
+.t-btn:hover { background: rgba(255,255,255,0.05); }
+.t-btn.primary:hover { background: var(--gold); color: var(--deep); }
+
+/* FOOTER */
+footer { padding: 60px 5% 30px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+footer p { opacity: 0.3; font-size: 0.82rem; margin-top: 12px; }
+.back-btn { display: inline-block; border: 1px solid rgba(201,168,76,0.3); color: var(--gold); padding: 12px 32px; border-radius: 40px; text-decoration: none; font-size: 0.85rem; transition: all 0.3s; margin-bottom: 20px; }
+.back-btn:hover { background: var(--gold); color: var(--deep); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes breatheIn { from { transform: scale(1); } to { transform: scale(1.3); } }
+@keyframes breatheOut { from { transform: scale(1.3); } to { transform: scale(1); } }
+@keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.15); opacity: 0; } }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: all 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+@media (max-width: 768px) {
+  .breath-layout { grid-template-columns: 1fr; }
+  .calc-form { grid-template-columns: 1fr; }
+  .result-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">🌿 YogJeevan</div>
+  <a href="index.html" class="nav-back">← Wapas Main Page</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="bgCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">Gyan Ka Saagar</div>
+    <h1>Yoga ka<br><em>Gehara Gyan</em></h1>
+    <p>Chakra se lekar pranayama tak — apne sharir aur mann ko andar se samjho</p>
+    <div class="scroll-hint">↓ &nbsp; NEECHE SCROLL KARO &nbsp; ↓</div>
+  </div>
+</section>
+
+<!-- CHAKRA -->
+<section class="chakra-section">
+  <div class="sec-label reveal">⚡ Saat Chakra</div>
+  <h2 class="sec-title reveal">Apni Shakti ke<br>Saath Ketra</h2>
+  <div class="chakra-grid" id="chakraGrid"></div>
+</section>
+
+<!-- BREATH TRAINER -->
+<section class="breath-section" id="breath">
+  <div class="breath-layout">
+    <div>
+      <div class="sec-label reveal">💨 Pranayama Trainer</div>
+      <h2 class="sec-title reveal" style="font-size:2.5rem;">Saans ke saath<br>Mann ko Saadho</h2>
+      <div class="breath-circle-wrap reveal">
+        <div class="breath-outer">
+          <div class="breath-middle">
+            <div class="breath-inner" id="breathCircle">
+              <span class="breath-text" id="breathText">Shuru karo</span>
+              <span class="breath-count" id="breathCount">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="breath-controls">
+        <button class="breath-btn active" onclick="setBreath('478')">4-7-8</button>
+        <button class="breath-btn" onclick="setBreath('box')">Box</button>
+        <button class="breath-btn" onclick="setBreath('anulom')">Anulom</button>
+        <button class="breath-btn" onclick="toggleBreath()" id="breathToggle">▶ Start</button>
+      </div>
+    </div>
+    <div class="breath-info reveal">
+      <h3>Pranayama ke<br>Prakar</h3>
+      <p>Saans lena sirf jeene ka zariya nahi — yeh aapke mann aur sharir ka connection hai.</p>
+      <div class="pranayama-list" id="pranayamaList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- NUTRITION CALCULATOR -->
+<section class="calc-section">
+  <div class="calc-box">
+    <div class="sec-label reveal">🥗 Poshan Calculator</div>
+    <h2 class="sec-title reveal">Apni Diet<br>Calculate Karo</h2>
+    <p class="reveal" style="opacity:0.6; font-weight:300; line-height:1.7; margin-bottom:0;">Apni height, weight aur goal dalkar jaano — aapko rozana kitni calories chahiye aur kya khana chahiye.</p>
+    <div class="calc-form">
+      <div class="input-group reveal">
+        <label>Aayu (Saal)</label>
+        <input type="number" id="age" placeholder="25" min="10" max="100">
+      </div>
+      <div class="input-group reveal">
+        <label>Ling</label>
+        <select id="gender">
+          <option value="male">Purush</option>
+          <option value="female">Mahila</option>
+        </select>
+      </div>
+      <div class="input-group reveal">
+        <label>Wajan (kg)</label>
+        <input type="number" id="weight" placeholder="65" min="30" max="200">
+      </div>
+      <div class="input-group reveal">
+        <label>Lambai (cm)</label>
+        <input type="number" id="height" placeholder="165" min="100" max="250">
+      </div>
+      <div class="input-group reveal">
+        <label>Lakshya</label>
+        <select id="goal">
+          <option value="loss">Wajan Ghataana</option>
+          <option value="maintain">Wajan Theek Rakhna</option>
+          <option value="gain">Muscle Banana</option>
+        </select>
+      </div>
+      <div class="input-group reveal">
+        <label>Vyayam</label>
+        <select id="activity">
+          <option value="1.2">Kum (Sirf Yoga)</option>
+          <option value="1.375">Thoda (3x/week)</option>
+          <option value="1.55">Zyada (5x/week)</option>
+          <option value="1.725">Bahut Zyada</option>
+        </select>
+      </div>
+      <button class="calc-btn reveal" onclick="calculate()">🌿 Mera Poshan Jaano</button>
+      <div class="calc-result" id="calcResult">
+        <div class="result-cards" id="resultCards"></div>
+        <div class="meal-plan" id="mealPlan"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YOGA QUIZ -->
+<section class="quiz-section">
+  <div class="sec-label reveal" style="text-align:center;">🧠 Yoga Gyan Quiz</div>
+  <h2 class="sec-title reveal" style="text-align:center; margin-bottom:40px;">Apna Yoga<br>Gyan Jaancho</h2>
+  <div class="quiz-box">
+    <div class="quiz-progress reveal">
+      <div class="quiz-progress-bar" id="quizBar" style="width:0%"></div>
+    </div>
+    <div class="question-card reveal" id="questionCard">
+      <div class="q-num" id="qNum">Sawaal 1 / 8</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-options" id="qOptions"></div>
+      <button class="quiz-next" id="quizNext" onclick="nextQuestion()">Agla Sawaal →</button>
+    </div>
+    <div class="quiz-score" id="quizScore">
+      <div class="score-num" id="scoreNum">0/8</div>
+      <p style="opacity:0.6; margin:12px 0 24px;" id="scoreMsg"></p>
+      <button class="breath-btn" onclick="restartQuiz()">Dobara Khelo</button>
+    </div>
+  </div>
+</section>
+
+<!-- ASANA TIMER -->
+<section class="timer-section">
+  <div class="sec-label reveal">⏱ Asana Timer</div>
+  <h2 class="sec-title reveal">Asana Timer<br>Set Karo</h2>
+  <p class="reveal" style="opacity:0.6; font-weight:300; margin-bottom:0;">Asana chunno — timer apne aap set ho jaayega</p>
+  <div class="asana-grid" id="asanaGrid"></div>
+  <div class="timer-display reveal">
+    <div class="timer-circle">
+      <svg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="96" stroke-dasharray="603" stroke-dashoffset="603" id="timerArc"/>
+      </svg>
+      <span class="timer-num" id="timerNum">00:00</span>
+      <span class="timer-label" id="timerLabel">ASANA CHUNIYE</span>
+    </div>
+    <div class="timer-btns">
+      <button class="t-btn primary" onclick="startTimer()" id="startBtn">▶ Shuru</button>
+      <button class="t-btn" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" class="back-btn">← Main Page Par Jaao</a>
+  <p>🌿 YogJeevan — Andar se swasth, bahar se khush</p>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 80);
+});
+
+// CANVAS BACKGROUND
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const particles = Array.from({length: 60}, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 1.5 + 0.3,
+  vx: (Math.random() - 0.5) * 0.3,
+  vy: (Math.random() - 0.5) * 0.3,
+  alpha: Math.random() * 0.6 + 0.2
+}));
+function drawCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(201,168,76,${p.alpha})`;
+    ctx.fill();
+  });
+  // connect nearby
+  particles.forEach((a, i) => {
+    particles.slice(i+1).forEach(b => {
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if (d < 100) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(201,168,76,${0.08*(1-d/100)})`;
+        ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(drawCanvas);
+}
+drawCanvas();
+
+// CHAKRA DATA
+const chakras = [
+  { symbol:'🔴', name:'Muladhara', hindi:'मूलाधार चक्र', color:'#c0392b', desc:'Prithvi tatva. Stableness, security, aur aadhar. Pairoun ki jadon se judaa.' },
+  { symbol:'🟠', name:'Swadhisthana', hindi:'स्वाधिष्ठान', color:'#e67e22', desc:'Jal tatva. Creativity, bhavna, aur aanand. Navel ke neeche.' },
+  { symbol:'🟡', name:'Manipura', hindi:'मणिपुर चक्र', color:'#f1c40f', desc:'Agni tatva. Aatmavishwas, shakti, aur niyantran. Naval ke paas.' },
+  { symbol:'💚', name:'Anahata', hindi:'अनाहत चक्र', color:'#27ae60', desc:'Vayu tatva. Prem, karuna, aur shanti. Hriday ke madhya mein.' },
+  { symbol:'🔵', name:'Vishuddha', hindi:'विशुद्ध चक्र', color:'#2980b9', desc:'Akash tatva. Satya, abhivyakti, aur soochna. Gale mein.' },
+  { symbol:'🟣', name:'Ajna', hindi:'आज्ञा चक्र', color:'#8e44ad', desc:'Intuition, divyadrishti, aur pragna. Bhrukuti ke beech mein.' },
+  { symbol:'⚪', name:'Sahasrara', hindi:'सहस्रार चक्र', color:'#9b59b6', desc:'Divya chetana, moksha, aur mukti. Sar ke shikhar par.' },
+];
+const cg = document.getElementById('chakraGrid');
+chakras.forEach(c => {
+  const div = document.createElement('div');
+  div.className = 'chakra-card';
+  div.style.cssText = `--cc:${c.color};`;
+  div.innerHTML = `
+    <span class="chakra-symbol">${c.symbol}</span>
+    <div class="chakra-name">${c.name}</div>
+    <div class="chakra-hindi">${c.hindi}</div>
+    <div class="chakra-desc">${c.desc}</div>
+    <div class="chakra-bar" style="background:${c.color};"></div>
+  `;
+  div.style.setProperty('--hov-bg', c.color + '10');
+  div.addEventListener('mouseenter', () => div.style.background = c.color + '08');
+  div.addEventListener('mouseleave', () => div.style.background = '');
+  cg.appendChild(div);
+});
+
+// BREATH TRAINER
+const breathPatterns = {
+  '478': { inhale:4, hold:7, exhale:8, name:'4-7-8 Technique' },
+  'box': { inhale:4, hold:4, exhale:4, name:'Box Breathing' },
+  'anulom': { inhale:4, hold:4, exhale:8, name:'Anulom Vilom' }
+};
+let currentPattern = breathPatterns['478'];
+let breathRunning = false;
+let breathInterval = null;
+let breathPhase = 'ready';
+let breathSec = 0;
+
+const pranayamas = [
+  { name:'Kapalbhati', benefit:'Phaiphdon ke liye, wajan ghataane ke liye', time:'10 min' },
+  { name:'Bhramari', benefit:'Stress, anxiety ke liye best', time:'5 min' },
+  { name:'Ujjayi', benefit:'Concentration badhata hai', time:'8 min' },
+  { name:'Sheetali', benefit:'Garmi aur gusse ko shant karta hai', time:'5 min' },
+];
+const pl = document.getElementById('pranayamaList');
+pranayamas.forEach(p => {
+  pl.innerHTML += `<div class="prana-item"><div><div class="prana-name">${p.name}</div><div class="prana-benefit" style="margin-top:4px;">${p.benefit}</div></div><div style="font-size:0.78rem;color:var(--gold);">${p.time}</div></div>`;
+});
+
+function setBreath(type) {
+  currentPattern = breathPatterns[type];
+  document.querySelectorAll('.breath-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  stopBreath();
+}
+
+function toggleBreath() {
+  if (breathRunning) stopBreath();
+  else startBreath();
+}
+
+function startBreath() {
+  breathRunning = true;
+  document.getElementById('breathToggle').textContent = '⏸ Ruko';
+  runBreathCycle();
+}
+
+function stopBreath() {
+  breathRunning = false;
+  clearTimeout(breathInterval);
+  document.getElementById('breathToggle').textContent = '▶ Start';
+  document.getElementById('breathText').textContent = 'Shuru karo';
+  document.getElementById('breathCount').textContent = '0';
+  const c = document.getElementById('breathCircle');
+  c.style.animation = '';
+  c.style.transform = '';
+}
+
+function runBreathCycle() {
+  if (!breathRunning) return;
+  const { inhale, hold, exhale } = currentPattern;
+  const c = document.getElementById('breathCircle');
+  const txt = document.getElementById('breathText');
+  const cnt = document.getElementById('breathCount');
+
+  // Inhale
+  txt.textContent = 'Saans Lo';
+  c.style.transition = `transform ${inhale}s ease-in-out`;
+  c.style.transform = 'scale(1.3)';
+  c.style.background = 'radial-gradient(circle, rgba(92,122,78,0.6), rgba(30,45,26,0.8))';
+  let t = inhale;
+  const inhaleTimer = setInterval(() => { cnt.textContent = t--; }, 1000);
+  breathInterval = setTimeout(() => {
+    clearInterval(inhaleTimer);
+    if (!breathRunning) return;
+    // Hold
+    txt.textContent = 'Rokho';
+    c.style.background = 'radial-gradient(circle, rgba(201,168,76,0.3), rgba(30,45,26,0.8))';
+    t = hold;
+    const holdTimer = setInterval(() => { cnt.textContent = t--; }, 1000);
+    breathInterval = setTimeout(() => {
+      clearInterval(holdTimer);
+      if (!breathRunning) return;
+      // Exhale
+      txt.textContent = 'Chodoo';
+      c.style.transition = `transform ${exhale}s ease-in-out`;
+      c.style.transform = 'scale(1)';
+      c.style.background = 'radial-gradient(circle, rgba(92,122,78,0.2), rgba(30,45,26,0.8))';
+      t = exhale;
+      const exhaleTimer = setInterval(() => { cnt.textContent = t--; }, 1000);
+      breathInterval = setTimeout(() => {
+        clearInterval(exhaleTimer);
+        runBreathCycle();
+      }, exhale * 1000);
+    }, hold * 1000);
+  }, inhale * 1000);
+}
+
+// NUTRITION CALCULATOR
+function calculate() {
+  const age = +document.getElementById('age').value;
+  const gender = document.getElementById('gender').value;
+  const weight = +document.getElementById('weight').value;
+  const height = +document.getElementById('height').value;
+  const goal = document.getElementById('goal').value;
+  const activity = +document.getElementById('activity').value;
+
+  if (!age || !weight || !height) { alert('Sab fields bharo!'); return; }
+
+  let bmr = gender === 'male'
+    ? 10*weight + 6.25*height - 5*age + 5
+    : 10*weight + 6.25*height - 5*age - 161;
+
+  let tdee = Math.round(bmr * activity);
+  let target = goal === 'loss' ? tdee - 400 : goal === 'gain' ? tdee + 300 : tdee;
+  let protein = Math.round(weight * 1.6);
+  let carbs = Math.round((target * 0.45) / 4);
+  let fats = Math.round((target * 0.25) / 9);
+
+  const rc = document.getElementById('resultCards');
+  rc.innerHTML = `
+    <div class="result-card"><span class="result-num">${target}</span><span class="result-label">Calories/Din</span></div>
+    <div class="result-card"><span class="result-num">${protein}g</span><span class="result-label">Protein</span></div>
+    <div class="result-card"><span class="result-num">${carbs}g</span><span class="result-label">Carbs</span></div>
+  `;
+
+  const meals = goal === 'loss'
+    ? [['Subah (7 AM)','Daliya + Anda','320 kcal'],['Dopahar (1 PM)','Moong Dal + Roti','450 kcal'],['Shaam (5 PM)','Mutthi bhar Meve','150 kcal'],['Raat (7 PM)','Sabzi + Paneer','380 kcal']]
+    : goal === 'gain'
+    ? [['Subah (7 AM)','Ande + Banana Shake','520 kcal'],['Dopahar (1 PM)','Dal Chawal + Dahi','650 kcal'],['Shaam (4 PM)','Mungfali + Fruit','280 kcal'],['Raat (7 PM)','Paneer + 2 Roti','580 kcal']]
+    : [['Subah (7 AM)','Dahi + Fruits','300 kcal'],['Dopahar (1 PM)','Dal + Chawal + Salad','500 kcal'],['Shaam (5 PM)','Chana Chaat','200 kcal'],['Raat (7 PM)','Khichdi + Sabzi','400 kcal']];
+
+  document.getElementById('mealPlan').innerHTML = `<h4>🌿 Aapki Meal Plan</h4>` +
+    meals.map(m => `<div class="meal-row"><span>${m[0]} — ${m[1]}</span><span>${m[2]}</span></div>`).join('');
+
+  const res = document.getElementById('calcResult');
+  res.style.display = 'block';
+  res.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// QUIZ
+const questions = [
+  { q:'Yoga ka arth kya hai?', opts:['Ekta/Jodna','Saans lena','Daud lagana','Neend lena'], ans:0 },
+  { q:'Surya Namaskar mein kitne asana hote hain?', opts:['8','10','12','14'], ans:2 },
+  { q:'Kaun sa chakra prem aur karuna se juda hai?', opts:['Muladhara','Anahata','Ajna','Vishuddha'], ans:1 },
+  { q:'Pranayama ka matlab kya hai?', opts:['Saans ka vigyan','Mann ka niyantran','Sharir ka khichav','Neend ki vidhi'], ans:0 },
+  { q:'Shavasana mein kya kiya jaata hai?', opts:['Daudo','Poori tarah aaram','Ulte khade raho','Haath upar karo'], ans:1 },
+  { q:'Kaun sa yoga subah ke liye sabse accha hai?', opts:['Bikram Yoga','Yin Yoga','Surya Namaskar','Nidra Yoga'], ans:2 },
+  { q:'Protein ke liye sabse accha Indian food kya hai?', opts:['Maida','Paneer aur Dal','Cheeni','Namak'], ans:1 },
+  { q:'Meditation mein aankhein kyu band hoti hain?', opts:['So jaane ke liye','Bahar ke dhyan hatane ke liye','Fashion ke liye','Rule hai'], ans:1 },
+];
+let qIdx = 0, score = 0, answered = false;
+
+function loadQuestion() {
+  if (qIdx >= questions.length) { showScore(); return; }
+  const q = questions[qIdx];
+  document.getElementById('qNum').textContent = `Sawaal ${qIdx+1} / ${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('quizBar').style.width = (qIdx / questions.length * 100) + '%';
+  document.getElementById('quizNext').style.display = 'none';
+  answered = false;
+  const opts = document.getElementById('qOptions');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.textContent = o;
+    btn.onclick = () => answer(i);
+    opts.appendChild(btn);
+  });
+}
+
+function answer(i) {
+  if (answered) return;
+  answered = true;
+  const btns = document.querySelectorAll('.q-opt');
+  btns[questions[qIdx].ans].classList.add('correct');
+  if (i !== questions[qIdx].ans) btns[i].classList.add('wrong');
+  else score++;
+  document.getElementById('quizNext').style.display = 'inline-block';
+}
+
+function nextQuestion() { qIdx++; loadQuestion(); }
+
+function showScore() {
+  document.getElementById('questionCard').style.display = 'none';
+  document.getElementById('quizScore').style.display = 'block';
+  document.getElementById('scoreNum').textContent = `${score}/${questions.length}`;
+  const msgs = ['Aur padhna padega! 📚','Theek hai, aage badhte raho! 🌱','Bahut accha! 🌿','Yoga Guru ho tum! 🧘‍♂️'];
+  document.getElementById('scoreMsg').textContent = msgs[Math.floor(score/questions.length * (msgs.length-1))];
+  document.getElementById('quizBar').style.width = '100%';
+}
+
+function restartQuiz() {
+  qIdx = 0; score = 0;
+  document.getElementById('questionCard').style.display = 'block';
+  document.getElementById('quizScore').style.display = 'none';
+  loadQuestion();
+}
+
+loadQuestion();
+
+// ASANA TIMER
+const asanas = [
+  { emoji:'🌅', name:'Surya Namaskar', desc:'Poore sharir ke liye', sec:300 },
+  { emoji:'🐍', name:'Bhujangasana', desc:'Peeth ke liye', sec:60 },
+  { emoji:'🌳', name:'Vrikshasana', desc:'Santulan ke liye', sec:120 },
+  { emoji:'🧘', name:'Padmasana', desc:'Dhyan ke liye', sec:600 },
+  { emoji:'💨', name:'Pranayama', desc:'Saans ke liye', sec:600 },
+  { emoji:'🌊', name:'Shavasana', desc:'Aaram ke liye', sec:600 },
+];
+const ag = document.getElementById('asanaGrid');
+let selectedAsana = null;
+asanas.forEach((a, i) => {
+  const div = document.createElement('div');
+  div.className = 'asana-tile';
+  div.innerHTML = `<span class="asana-emoji">${a.emoji}</span><h4>${a.name}</h4><p>${a.desc}</p><span class="duration">⏱ ${Math.floor(a.sec/60)} min</span>`;
+  div.onclick = () => {
+    document.querySelectorAll('.asana-tile').forEach(t => t.classList.remove('selected'));
+    div.classList.add('selected');
+    selectedAsana = a;
+    resetTimer();
+    document.getElementById('timerLabel').textContent = a.name.toUpperCase();
+    updateTimerDisplay(a.sec);
+  };
+  ag.appendChild(div);
+});
+
+let timerSec = 0, totalSec = 0, timerRunning = false, timerInt = null;
+
+function updateTimerDisplay(sec) {
+  const m = String(Math.floor(sec/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  document.getElementById('timerNum').textContent = `${m}:${s}`;
+  const arc = document.getElementById('timerArc');
+  const pct = totalSec > 0 ? (timerSec / totalSec) : 1;
+  arc.style.strokeDashoffset = 603 * pct;
+}
+
+function startTimer() {
+  if (!selectedAsana) { alert('Pehle asana chuniye!'); return; }
+  if (timerRunning) {
+    clearInterval(timerInt);
+    timerRunning = false;
+    document.getElementById('startBtn').textContent = '▶ Shuru';
+    return;
+  }
+  if (timerSec === 0) { timerSec = selectedAsana.sec; totalSec = selectedAsana.sec; }
+  timerRunning = true;
+  document.getElementById('startBtn').textContent = '⏸ Pause';
+  timerInt = setInterval(() => {
+    timerSec--;
+    updateTimerDisplay(timerSec);
+    if (timerSec <= 0) {
+      clearInterval(timerInt);
+      timerRunning = false;
+      document.getElementById('startBtn').textContent = '▶ Shuru';
+      document.getElementById('timerLabel').textContent = '✅ HO GAYA!';
+    }
+  }, 1000);
+}
+
+function resetTimer() {
+  clearInterval(timerInt);
+  timerRunning = false;
+  timerSec = selectedAsana ? selectedAsana.sec : 0;
+  totalSec = timerSec;
+  document.getElementById('startBtn').textContent = '▶ Shuru';
+  if (selectedAsana) updateTimerDisplay(timerSec);
+  else { document.getElementById('timerNum').textContent = '00:00'; document.getElementById('timerArc').style.strokeDashoffset = 603; }
+}
+
+// SCROLL REVEAL
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
+</body>
+</html>
